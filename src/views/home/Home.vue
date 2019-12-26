@@ -65,10 +65,11 @@
 <script>
   import NavBar from 'components/common/navbar/NavBar'
   import HomeSwiper from './childComps/HomeSwiper'
-  import {getHomeMultidata} from 'network/home'
   import RecommendViews from './childComps/RecommendViews'
   import FeatureViews from './childComps/FeatureViews'
   import TabControl from 'components/content/tabcontrol/TabControl'
+
+  import {getHomeMultidata,getGoodsList} from 'network/home'
 
   export default {
     name: 'Home',
@@ -82,15 +83,36 @@
     data() {
       return {
         banner: [],
-        recommend: []
+        recommend: [],
+        goodslist: {
+          pop: { page: 0 , list: [] },
+          new: { page: 0 , list: [] },
+          sell: { page: 0 , list: [] }
+        }
       }
     },
     created() {
-      getHomeMultidata().then(res => {
-        console.log(res);
-        this.banner = res.data.banner.list;
-        this.recommend = res.data.recommend.list;
-      })
+      this.getHomeMultidata();
+      this.getGoodsList('pop');
+      this.getGoodsList('new');
+      this.getGoodsList('sell');
+    },
+    methods: {
+      getHomeMultidata() {
+        getHomeMultidata().then(res => {
+          // console.log(res);
+          this.banner = res.data.banner.list;
+          this.recommend = res.data.recommend.list;
+        })
+      },
+      getGoodsList(type) {
+        const page = this.goodslist[type].page + 1;
+        getGoodsList(type,page).then(res => {
+          // console.log(res);
+          this.goodslist[type].list.push(...res.data.list);
+          this.goodslist[type].page = page;
+        })
+      }
     }
   }
 </script>
