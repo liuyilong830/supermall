@@ -6,7 +6,8 @@
     <home-swiper :banner='banner'></home-swiper>
     <recommend-views :recommend='recommend'></recommend-views>
     <feature-views></feature-views>
-    <tab-control :title="['流行','新款','精选']"></tab-control>
+    <tab-control :title="['流行','新款','精选']" @tarClick='tarClick'></tab-control>
+    <goods-list :goods='showGoods'></goods-list>
     <ul>
       <li>第1个</li>
       <li>第2个</li>
@@ -68,6 +69,7 @@
   import RecommendViews from './childComps/RecommendViews'
   import FeatureViews from './childComps/FeatureViews'
   import TabControl from 'components/content/tabcontrol/TabControl'
+  import GoodsList from 'components/content/goodslist/GoodsList'
 
   import {getHomeMultidata,getGoodsList} from 'network/home'
 
@@ -78,7 +80,8 @@
       HomeSwiper,
       RecommendViews,
       FeatureViews,
-      TabControl
+      TabControl,
+      GoodsList
     },
     data() {
       return {
@@ -88,7 +91,13 @@
           pop: { page: 0 , list: [] },
           new: { page: 0 , list: [] },
           sell: { page: 0 , list: [] }
-        }
+        },
+        currentType: 'pop'
+      }
+    },
+    computed: {
+      showGoods() {
+        return this.goodslist[this.currentType].list
       }
     },
     created() {
@@ -98,6 +107,22 @@
       this.getGoodsList('sell');
     },
     methods: {
+      tarClick(index) {
+        // console.log(index);
+        switch(index) {
+          case 0:
+            this.currentType = 'pop'
+            break
+          case 1:
+            this.currentType = 'new'
+            break
+          case 2:
+            this.currentType = 'sell'
+            break
+        }
+      },
+
+
       getHomeMultidata() {
         getHomeMultidata().then(res => {
           // console.log(res);
