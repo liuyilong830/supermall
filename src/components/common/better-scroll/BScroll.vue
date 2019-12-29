@@ -16,11 +16,38 @@
         scroll: null
       }
     },
+    props: {
+      probeType: {
+        type: Number,
+        default: 0
+      }
+    },
     mounted() {
       this.scroll = new BScroll(this.$refs.wrapper,{
         probeType: 3,
-        pullUpLoad: true
+        pullUpLoad: true,
+        click: true
       })
+
+      this.scroll.on('scroll',(position) => {
+        // console.log(position);
+        this.$emit('scroll' , position);
+      })
+      this.scroll.on('pullingUp',() => {
+        /* console.log('上拉加载更多');
+        setTimeout(() => {
+          this.scroll.finishPullUp();
+        } , 2000); */
+        this.$emit('pullingUp',this.scroll);
+      })
+    },
+    methods: {
+      scrollTo(x, y , time=300) {
+        this.scroll.scrollTo(x , y , time);
+      },
+      finishPullUp() {
+        this.scroll.finishPullUp();
+      }
     }
   }
 </script>

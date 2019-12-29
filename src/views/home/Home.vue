@@ -4,13 +4,15 @@
       <div slot="center">购物街</div>
     </nav-bar>
 
-    <b-scroll class="wrapper">
+    <b-scroll class="wrapper" ref="scroll" :probeType='3' @scroll='contentScroll' @pullingUp='pullingUp'>
       <home-swiper :banner='banner'></home-swiper>
       <recommend-views :recommend='recommend'></recommend-views>
       <feature-views></feature-views>
       <tab-control :title="['流行','新款','精选']" @tarClick='tarClick'></tab-control>
       <goods-list :goods='showGoods'></goods-list>
     </b-scroll>
+
+    <back-top @click.native="backClick" v-show="isShowBackTop"></back-top>
     
   </div>
 </template>
@@ -22,6 +24,7 @@
   import FeatureViews from './childComps/FeatureViews'
   import TabControl from 'components/content/tabcontrol/TabControl'
   import GoodsList from 'components/content/goodslist/GoodsList'
+  import BackTop from 'components/content/backtop/BackTop'
 
   import {getHomeMultidata,getGoodsList} from 'network/home'
 
@@ -36,7 +39,8 @@
       FeatureViews,
       TabControl,
       GoodsList,
-      BScroll
+      BScroll,
+      BackTop
     },
     data() {
       return {
@@ -47,7 +51,8 @@
           new: { page: 0 , list: [] },
           sell: { page: 0 , list: [] }
         },
-        currentType: 'pop'
+        currentType: 'pop',
+        isShowBackTop: false
       }
     },
     computed: {
@@ -76,8 +81,20 @@
             break
         }
       },
+      backClick() {
+        this.$refs.scroll.scrollTo(0 , 0 , 500);
+      },
+      contentScroll(position) {
+        // console.log(position);
+        this.isShowBackTop = (-position.y) > 1000
+      },
+      pullingUp(scroll) {
+        // console.log('上拉加载更多');
+        this.getGoodsList(this.currentType);
+        scroll.refresh();
+      },
 
-
+      /* 网络请求相关的方法 */
       getHomeMultidata() {
         getHomeMultidata().then(res => {
           // console.log(res);
@@ -91,6 +108,8 @@
           // console.log(res);
           this.goodslist[type].list.push(...res.data.list);
           this.goodslist[type].page = page;
+          // 当上拉加载完一次之后执行下面函数让 scroll 能够再次上拉加载更多
+          this.$refs.scroll.finishPullUp();
         })
       }
     }
