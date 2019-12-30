@@ -8,7 +8,7 @@
       <home-swiper :banner='banner'></home-swiper>
       <recommend-views :recommend='recommend'></recommend-views>
       <feature-views></feature-views>
-      <tab-control :title="['流行','新款','精选']" @tarClick='tarClick'></tab-control>
+      <tab-control :title="['流行','新款','精选']" @tarClick='tarClick' ref="tabControl"></tab-control>
       <goods-list :goods='showGoods'></goods-list>
     </b-scroll>
 
@@ -52,7 +52,8 @@
           sell: { page: 0 , list: [] }
         },
         currentType: 'pop',
-        isShowBackTop: false
+        isShowBackTop: false,
+        tabOffsetTop: 0
       }
     },
     computed: {
@@ -65,8 +66,34 @@
       this.getGoodsList('pop');
       this.getGoodsList('new');
       this.getGoodsList('sell');
+
+      
+    },
+    mounted() {
+      // 1.防抖函数
+      const refresh = this.debounce(this.$refs.scroll.refresh , 500);
+      // 在这里接收 GoodListItem 向事件总线发送的事件 itemImgLoad
+      this.$bus.$on('itemImgLoad', () => {
+        // console.log('-----------');
+        // 当图片加载完之后我们调用 scroll.refresh() 这个方法将重新刷新 scroll对象中的scrollerHeight属性值 
+        refresh();
+      })
+
+      // 2.获取tabControl的offsetTop值
+      this.tabOffsetTop = this.$refs.tabControl.$el.offsetTop;
+      console.log(this.tabOffsetTop);
     },
     methods: {
+      debounce(func , delay) {
+        let timer = null;
+        return function(...args) {
+          if(timer) clearTimeout(timer);
+          timer = setTimeout(() => {
+            func.apply(this , args);
+            // func(args);
+          } , delay);
+        }
+      },
       tarClick(index) {
         // console.log(index);
         switch(index) {
@@ -91,7 +118,6 @@
       pullingUp(scroll) {
         // console.log('上拉加载更多');
         this.getGoodsList(this.currentType);
-        scroll.refresh();
       },
 
       /* 网络请求相关的方法 */
@@ -105,7 +131,6 @@
       getGoodsList(type) {
         const page = this.goodslist[type].page + 1;
         getGoodsList(type,page).then(res => {
-          // console.log(res);
           this.goodslist[type].list.push(...res.data.list);
           this.goodslist[type].page = page;
           // 当上拉加载完一次之后执行下面函数让 scroll 能够再次上拉加载更多

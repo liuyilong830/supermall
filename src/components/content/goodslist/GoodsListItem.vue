@@ -2,7 +2,7 @@
   <div class="goods-list-item">
     <div class="goods-item-first">
       <a :href="item.link">
-        <img :src="item.show.img" alt="">
+        <img :src="item.show.img" alt="" @load="itemImgLoad">
       </a>
     </div>
     <div class="goods-item-second">
@@ -22,6 +22,12 @@
         default() {
           return {};
         }
+      }
+    },
+    methods: {
+      itemImgLoad() {
+        // 在事件总线中发送了一个 itemImgLoad 的事件
+        this.$bus.$emit('itemImgLoad');
       }
     }
   }
