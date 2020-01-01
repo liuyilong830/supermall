@@ -2,7 +2,7 @@
   <swiper>
     <swiper-item v-for="(item,index) in banner" :key="index">
       <a :href="item.link">
-        <img :src="item.image" alt="">
+        <img :src="item.image" alt="" @load="imageLoad">
       </a>
     </swiper-item>
   </swiper>
@@ -22,6 +22,20 @@
         type: Array,
         default() {
           return [];
+        }
+      }
+    },
+    data() {
+      return {
+        isFlag: false
+      }
+    },
+    methods: {
+      imageLoad() {
+        // 如果在home组件中使用了.once的话就不用这样写了
+        if(!this.isFlag) {
+          this.$emit('swiperImageLoad');
+          this.isFlag = true;
         }
       }
     }

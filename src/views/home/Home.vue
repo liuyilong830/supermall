@@ -3,12 +3,12 @@
     <nav-bar class="nav_bar_home">
       <div slot="center">购物街</div>
     </nav-bar>
-
+    <tab-control :title="['流行','新款','精选']" @tarClick='tarClick' ref="tabControl1" class="tab-control1" v-show="isTabControl"></tab-control>
     <b-scroll class="wrapper" ref="scroll" :probeType='3' @scroll='contentScroll' @pullingUp='pullingUp'>
-      <home-swiper :banner='banner'></home-swiper>
-      <recommend-views :recommend='recommend'></recommend-views>
-      <feature-views></feature-views>
-      <tab-control :title="['流行','新款','精选']" @tarClick='tarClick' ref="tabControl"></tab-control>
+      <home-swiper :banner='banner' @swiperImageLoad='swiperImageLoad'></home-swiper>
+      <recommend-views :recommend='recommend' @recommendImageLoad='recommendImageLoad'></recommend-views>
+      <feature-views @featureImageLoad='featureImageLoad'></feature-views>
+      <tab-control :title="['流行','新款','精选']" @tarClick='tarClick' ref="tabControl2"></tab-control>
       <goods-list :goods='showGoods'></goods-list>
     </b-scroll>
 
@@ -53,12 +53,21 @@
         },
         currentType: 'pop',
         isShowBackTop: false,
-        tabOffsetTop: 0
+        tabOffsetTop: 0,
+        isImageLoad: {
+          swiper: false,
+          recommend: false,
+          feature: false
+        },
+        isTabControl: false
       }
     },
     computed: {
       showGoods() {
         return this.goodslist[this.currentType].list
+      },
+      cupImageLoad() {
+        this.ImageLoad();
       }
     },
     created() {
@@ -78,10 +87,15 @@
         // 当图片加载完之后我们调用 scroll.refresh() 这个方法将重新刷新 scroll对象中的scrollerHeight属性值 
         refresh();
       })
-
-      // 2.获取tabControl的offsetTop值
-      this.tabOffsetTop = this.$refs.tabControl.$el.offsetTop;
-      console.log(this.tabOffsetTop);
+      setTimeout(() => {
+        this.ImageLoad();
+      }, 500)
+    },
+    updated() {
+      // 不能在 updata 中监听，有的时候还是不准确
+      /* this.tabOffsetTop = this.$refs.tabControl.$el.offsetTop;
+      console.log(this.tabOffsetTop); */
+      
     },
     methods: {
       debounce(func , delay) {
@@ -107,17 +121,40 @@
             this.currentType = 'sell'
             break
         }
+        this.$refs.tabControl1.currentIndex = index;
+        this.$refs.tabControl2.currentIndex = index;
       },
       backClick() {
         this.$refs.scroll.scrollTo(0 , 0 , 500);
       },
       contentScroll(position) {
         // console.log(position);
+        // 1.当滚动超过 1000 之后显示回到顶部的按钮
         this.isShowBackTop = (-position.y) > 1000
+        // 2.当滚动到一定位置时，显示另一个tabControl组件
+        this.isTabControl = (-position.y) > this.tabOffsetTop
       },
       pullingUp(scroll) {
         // console.log('上拉加载更多');
         this.getGoodsList(this.currentType);
+      },
+      swiperImageLoad() {
+        // 2.获取tabControl的offsetTop值
+        this.isImageLoad.swiper = true;
+        // this.tabOffsetTop = this.$refs.tabControl.$el.offsetTop;
+        // console.log(this.tabOffsetTop);
+      },
+      recommendImageLoad() {
+        this.isImageLoad.recommend = true;
+      },
+      featureImageLoad() {
+        this.isImageLoad.feature = true;
+      },
+      ImageLoad() {
+        if(this.isImageLoad.swiper && this.isImageLoad.recommend && this.isImageLoad.feature) {
+          this.tabOffsetTop = this.$refs.tabControl2.$el.offsetTop;
+          console.log(this.tabOffsetTop);
+        }
       },
 
       /* 网络请求相关的方法 */
@@ -142,18 +179,26 @@
 </script>
 
 <style scoped>
-  #home {
+  /* #home {
     padding-top: 44px;
-    /* position: relative; */
-  }
+    position: relative;
+  } */
   .nav_bar_home {
     background-color: var(--color-tint);
     text-align: center;
     color: #fff;
+    /* position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 9; */
+  }
+  .tab-control1 {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
+    margin-top: 44px;
     z-index: 9;
   }
   .wrapper {

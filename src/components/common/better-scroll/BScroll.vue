@@ -57,5 +57,8 @@
 </script>
 
 <style scope>
-  
+  .content {
+    /* 这里的设置是为了让 伪tab-control组件的 offsetTop 的值不包括 nav-bar的高度 */
+    position: relative;
+  }
 </style>
