@@ -1,9 +1,10 @@
 <template>
-  <div class="goods-list-item">
+  <div class="goods-list-item" @click="itemClick">
     <div class="goods-item-first">
-      <a :href="item.link">
+      <!-- <a :href="item.link">
         <img :src="item.show.img" alt="" @load="itemImgLoad">
-      </a>
+      </a> -->
+      <img :src="item.show.img" alt="" @load="itemImgLoad">
     </div>
     <div class="goods-item-second">
       <p>{{item.title}}</p>
@@ -28,6 +29,9 @@
       itemImgLoad() {
         // 在事件总线中发送了一个 itemImgLoad 的事件
         this.$bus.$emit('itemImgLoad');
+      },
+      itemClick() {
+        this.$router.push('/detail/' + this.item.iid);
       }
     }
   }

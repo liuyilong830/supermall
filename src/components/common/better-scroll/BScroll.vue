@@ -43,6 +43,7 @@
     },
     methods: {
       scrollTo(x, y , time=300) {
+        // console.log(time);
         this.scroll && this.scroll.scrollTo(x , y , time);
       },
       finishPullUp() {
@@ -51,6 +52,9 @@
       refresh() {
         // console.log(this.scroll);
         this.scroll && this.scroll.refresh();
+      },
+      getScrollY() {
+        return this.scroll? this.scroll.y : 0;
       }
     }
   }

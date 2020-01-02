@@ -59,7 +59,8 @@
           recommend: false,
           feature: false
         },
-        isTabControl: false
+        isTabControl: false,
+        saveY: 0
       }
     },
     computed: {
@@ -76,7 +77,9 @@
       this.getGoodsList('new');
       this.getGoodsList('sell');
 
-      
+    },
+    destroyed() {
+      console.log('home destroyed');
     },
     mounted() {
       // 1.防抖函数
@@ -95,6 +98,16 @@
       // 不能在 updata 中监听，有的时候还是不准确
       /* this.tabOffsetTop = this.$refs.tabControl.$el.offsetTop;
       console.log(this.tabOffsetTop); */
+      
+    },
+    activated() {
+      // console.log('saveY:'+this.saveY);
+      this.$refs.scroll.scrollTo(0,this.saveY);
+      this.$refs.scroll.refresh();
+    },
+    deactivated() {
+      this.saveY = this.$refs.scroll.getScrollY();
+      // console.log(this.saveY);
       
     },
     methods: {
@@ -153,7 +166,7 @@
       ImageLoad() {
         if(this.isImageLoad.swiper && this.isImageLoad.recommend && this.isImageLoad.feature) {
           this.tabOffsetTop = this.$refs.tabControl2.$el.offsetTop;
-          console.log(this.tabOffsetTop);
+          // console.log(this.tabOffsetTop);
         }
       },
 
