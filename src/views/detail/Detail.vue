@@ -1,10 +1,11 @@
 <template>
   <div class="detail">
     <detail-nav-bar class="detail-nav"></detail-nav-bar>
-    <b-scroll class="wrapper">
+    <b-scroll class="wrapper" ref="scroll">
       <detail-swiper :images='topImages'></detail-swiper>
       <detail-base-info :goods='goods'></detail-base-info>
       <detail-shop-info :shop='shop'></detail-shop-info>
+      <detail-goods-info :detailData='detailData' @detailInfo='detailInfo'></detail-goods-info>
     </b-scroll>
   </div>
 </template>
@@ -16,6 +17,7 @@
   import DetailBaseInfo from './detailChild/DetailBaseInfo'
   import DetailShopInfo from './detailChild/DetailShopInfo'
   import BScroll from 'components/common/better-scroll/BScroll'
+  import DetailGoodsInfo from './detailChild/DetailGoodsInfo'
 
   export default {
     name: 'Detail',
@@ -24,14 +26,21 @@
       DetailSwiper,
       DetailBaseInfo,
       DetailShopInfo,
-      BScroll
+      BScroll,
+      DetailGoodsInfo
     },
     data() {
       return {
         id: null,
         topImages: [],
         goods: {},
-        shop: {}
+        shop: {},
+        detailData: {}
+      }
+    },
+    methods: {
+      detailInfo() {
+        this.$refs.scroll.refresh();
       }
     },
     created() {
@@ -48,6 +57,8 @@
         this.goods = new Goods(data.itemInfo,data.columns,data.shopInfo.services);
         // 获取商品店家信息保存到shop中
         this.shop = new Shop(data.shopInfo);
+        // 获取商品详情图片等数据
+        this.detailData = data.detailInfo;
       })
     },
   }

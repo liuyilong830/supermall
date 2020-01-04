@@ -23,6 +23,9 @@
         </div>
       </div>
     </div>
+    <div class="shop-bottom">
+      <div class="enter-shop">进店逛逛</div>
+    </div>
   </div>
 </template>
 
@@ -43,7 +46,6 @@
 <style scoped>
   .detail-shopInfo {
     padding: 0 10px;
-    padding-bottom: 20px;
   }
   .shop-logo {
     height: 100px;
@@ -60,7 +62,7 @@
   }
   .shop-other {
     display: flex;
-    padding: 0 20px;
+    padding: 0 20px 20px;
   }
   .shop-sales, .shop-description {
     flex: 1;
@@ -68,6 +70,7 @@
   .shop-sales {
     display: flex;
     border-right: 1px solid #ccc;
+    padding-right: 10px;
   }
   .shop-sell, .shop-goods {
     flex: 1;
@@ -85,7 +88,7 @@
     font-size: 14px;
   }
   .shop-description {
-    padding-left: 20px;
+    padding-left: 10px;
   }
   .shop-description span:nth-child(1) {
     margin-right: 16px;
@@ -109,5 +112,18 @@
   .low {
     color: #fff;
     background-color: #54d425;
+  }
+  .shop-bottom {
+    height: 50px;
+  }
+  .enter-shop {
+    width: 33%;
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
+    margin: 10px auto;
+    border-radius: 6px;
+    /* border: 1px solid #ccc; */
+    background-color: #dad5d585;
   }
 </style>
