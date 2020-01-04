@@ -4,7 +4,7 @@
       <div slot="center">购物街</div>
     </nav-bar>
     <tab-control :title="['流行','新款','精选']" @tarClick='tarClick' ref="tabControl1" class="tab-control1" v-show="isTabControl"></tab-control>
-    <b-scroll class="wrapper" ref="scroll" :probeType='3' @scroll='contentScroll' @pullingUp='pullingUp'>
+    <b-scroll class="wrapper" ref="scroll" :probeType='3' @scroll='contentScroll' @pullingUp='pullingUp' :pullUpLoad='true'>
       <home-swiper :banner='banner' @swiperImageLoad='swiperImageLoad'></home-swiper>
       <recommend-views :recommend='recommend' @recommendImageLoad='recommendImageLoad'></recommend-views>
       <feature-views @featureImageLoad='featureImageLoad'></feature-views>

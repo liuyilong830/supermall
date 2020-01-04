@@ -20,12 +20,16 @@
       probeType: {
         type: Number,
         default: 0
+      },
+      pullUpLoad: {
+        type: Boolean,
+        default: false
       }
     },
     mounted() {
       this.scroll = new BScroll(this.$refs.wrapper,{
-        probeType: 3,
-        pullUpLoad: true,
+        probeType: this.probeType,
+        pullUpLoad: this.pullUpLoad,
         click: true
       })
 
