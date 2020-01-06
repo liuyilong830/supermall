@@ -6,18 +6,20 @@
       <detail-base-info :goods='goods'></detail-base-info>
       <detail-shop-info :shop='shop'></detail-shop-info>
       <detail-goods-info :detailData='detailData' @detailInfo='detailInfo'></detail-goods-info>
+      <detail-params-info :paramsInfo='paramsdata'></detail-params-info>
     </b-scroll>
   </div>
 </template>
 
 <script>
   import DetailNavBar from './detailChild/DetailNavBar'
-  import {getDetail,Goods,Shop} from 'network/detail'
+  import {getDetail,Goods,Shop,ItemParams} from 'network/detail'
   import DetailSwiper from './detailChild/DetailSwiper'
   import DetailBaseInfo from './detailChild/DetailBaseInfo'
   import DetailShopInfo from './detailChild/DetailShopInfo'
   import BScroll from 'components/common/better-scroll/BScroll'
   import DetailGoodsInfo from './detailChild/DetailGoodsInfo'
+  import DetailParamsInfo from './detailChild/DetailParamsInfo'
 
   export default {
     name: 'Detail',
@@ -27,7 +29,8 @@
       DetailBaseInfo,
       DetailShopInfo,
       BScroll,
-      DetailGoodsInfo
+      DetailGoodsInfo,
+      DetailParamsInfo
     },
     data() {
       return {
@@ -35,7 +38,8 @@
         topImages: [],
         goods: {},
         shop: {},
-        detailData: {}
+        detailData: {},
+        paramsdata: {}
       }
     },
     methods: {
@@ -59,6 +63,8 @@
         this.shop = new Shop(data.shopInfo);
         // 获取商品详情图片等数据
         this.detailData = data.detailInfo;
+        // 获取商品尺寸信息等数据
+        this.paramsdata = new ItemParams(data.itemParams.info,data.itemParams.rule);
       })
     },
   }

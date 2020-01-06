@@ -30,7 +30,7 @@
     },
     methods: {
       imageLoad() {
-        if(this.count++ === this.imagesLength) {
+        if(++this.count === this.imagesLength) {
           this.$emit('detailInfo');
         }
       }
@@ -44,6 +44,10 @@
 </script>
 
 <style scoped>
+  .detail-goods-info {
+    padding-bottom: 20px;
+    border-bottom: 5px solid #ccc;
+  }
   .detail-desc {
     padding: 0 10px 20px;
   }
