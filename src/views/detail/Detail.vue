@@ -7,30 +7,38 @@
       <detail-shop-info :shop='shop'></detail-shop-info>
       <detail-goods-info :detailData='detailData' @detailInfo='detailInfo'></detail-goods-info>
       <detail-params-info :paramsInfo='paramsdata'></detail-params-info>
+      <detail-evaluate :evaluate='evaluate'></detail-evaluate>
+      <goods-list :goods='goodsList'></goods-list>
     </b-scroll>
   </div>
 </template>
 
 <script>
   import DetailNavBar from './detailChild/DetailNavBar'
-  import {getDetail,Goods,Shop,ItemParams} from 'network/detail'
+  import {getDetail,getRecommend,Goods,Shop,ItemParams,ItemEvaluate} from 'network/detail'
   import DetailSwiper from './detailChild/DetailSwiper'
   import DetailBaseInfo from './detailChild/DetailBaseInfo'
   import DetailShopInfo from './detailChild/DetailShopInfo'
   import BScroll from 'components/common/better-scroll/BScroll'
   import DetailGoodsInfo from './detailChild/DetailGoodsInfo'
   import DetailParamsInfo from './detailChild/DetailParamsInfo'
+  import DetailEvaluate from './detailChild/DetailEvaluate'
+  import DetailRecommend from './detailChild/DetailRecommend'
+  import GoodsList from 'components/content/goodslist/GoodsList'
 
   export default {
     name: 'Detail',
     components: {
       DetailNavBar,
-      DetailSwiper,
+      DetailSwiper, 
       DetailBaseInfo,
       DetailShopInfo,
       BScroll,
       DetailGoodsInfo,
-      DetailParamsInfo
+      DetailParamsInfo,
+      DetailEvaluate,
+      DetailRecommend,
+      GoodsList
     },
     data() {
       return {
@@ -39,7 +47,9 @@
         goods: {},
         shop: {},
         detailData: {},
-        paramsdata: {}
+        paramsdata: {},
+        evaluate: {},
+        goodsList: []
       }
     },
     methods: {
@@ -65,6 +75,13 @@
         this.detailData = data.detailInfo;
         // 获取商品尺寸信息等数据
         this.paramsdata = new ItemParams(data.itemParams.info,data.itemParams.rule);
+        // 获取商品评价的数据
+        this.evaluate = new ItemEvaluate(data.rate);
+      })
+      // 获取推荐的信息
+      getRecommend().then(res => {
+        console.log(res);
+        this.goodsList = res.data.list;
       })
     },
   }

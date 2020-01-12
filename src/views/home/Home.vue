@@ -87,7 +87,7 @@
       // 在这里接收 GoodListItem 向事件总线发送的事件 itemImgLoad
       this.$bus.$on('itemImgLoad', () => {
         // console.log('-----------');
-        // 当图片加载完之后我们调用 scroll.refresh() 这个方法将重新刷新 scroll对象中的scrollerHeight属性值 
+        // 当图片加载完之后我们调用 scroll.refresh() 这个方法将重新刷新 scroll对象中的scrollerHeight属性值
         refresh();
       })
       setTimeout(() => {
