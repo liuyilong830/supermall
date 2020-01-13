@@ -27,6 +27,8 @@
   import BackTop from 'components/content/backtop/BackTop'
 
   import {getHomeMultidata,getGoodsList} from 'network/home'
+  import {debounce} from 'common/utils'
+  import {itemListListenerMixIn} from 'common/mixins'
 
   import BScroll from 'components/common/better-scroll/BScroll'
 
@@ -81,15 +83,9 @@
     destroyed() {
       console.log('home destroyed');
     },
+    // 使用了混入
+    mixins: [itemListListenerMixIn],
     mounted() {
-      // 1.防抖函数
-      const refresh = this.debounce(this.$refs.scroll.refresh , 500);
-      // 在这里接收 GoodListItem 向事件总线发送的事件 itemImgLoad
-      this.$bus.$on('itemImgLoad', () => {
-        // console.log('-----------');
-        // 当图片加载完之后我们调用 scroll.refresh() 这个方法将重新刷新 scroll对象中的scrollerHeight属性值
-        refresh();
-      })
       setTimeout(() => {
         this.ImageLoad();
       }, 500)
@@ -106,21 +102,15 @@
       this.$refs.scroll.refresh();
     },
     deactivated() {
+      // 1.获取y的值
       this.saveY = this.$refs.scroll.getScrollY();
       // console.log(this.saveY);
+
+      // 2.关闭事件总线
+      this.$bus.$off('itemImgLoad', this.itemImgLoadFunc);
       
     },
     methods: {
-      debounce(func , delay) {
-        let timer = null;
-        return function(...args) {
-          if(timer) clearTimeout(timer);
-          timer = setTimeout(() => {
-            func.apply(this , args);
-            // func(args);
-          } , delay);
-        }
-      },
       tarClick(index) {
         // console.log(index);
         switch(index) {

@@ -30,9 +30,9 @@
     },
     methods: {
       imageLoad() {
-        if(++this.count === this.imagesLength) {
+        // if(++this.count === this.imagesLength) {
           this.$emit('detailInfo');
-        }
+        // }
       }
     },
     watch: {

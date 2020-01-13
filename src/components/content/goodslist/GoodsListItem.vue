@@ -30,7 +30,18 @@
     },
     methods: {
       itemImgLoad() {
-        // 在事件总线中发送了一个 itemImgLoad 的事件
+        /*  
+          由于在 home 和 detail 中都要发送事件总线，这个时候就会有问题，比如在 detail中触发的是 home 中的事件接收，出于简单考虑，
+          可以发送两个事件，名字不同即可；出于方便的话，我们可以在 home 和 detail 组件中在组件出于非活跃状态的时候关闭总线，但是
+          detail中不能这么做，因为detail是不被 keep-alice 包裹的，所以非活跃状态函数不会起效果，则可以使用在销毁的时候关闭事件
+        */
+        // 方法一：
+        /* if(this.$route.path.indexOf('/home')) {
+          this.$bus.$emit('itemImgLoad');
+        }else {
+          this.$bus.$emit('detailItemImgLoad');
+        } */
+        // 方法二：
         this.$bus.$emit('itemImgLoad');
       },
       itemClick() {

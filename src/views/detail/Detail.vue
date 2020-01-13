@@ -1,14 +1,14 @@
 <template>
   <div class="detail">
-    <detail-nav-bar class="detail-nav"></detail-nav-bar>
+    <detail-nav-bar class="detail-nav" @detailThemeTopY='detailThemeTopY'></detail-nav-bar>
     <b-scroll class="wrapper" ref="scroll">
       <detail-swiper :images='topImages'></detail-swiper>
       <detail-base-info :goods='goods'></detail-base-info>
       <detail-shop-info :shop='shop'></detail-shop-info>
       <detail-goods-info :detailData='detailData' @detailInfo='detailInfo'></detail-goods-info>
-      <detail-params-info :paramsInfo='paramsdata'></detail-params-info>
-      <detail-evaluate :evaluate='evaluate'></detail-evaluate>
-      <goods-list :goods='goodsList'></goods-list>
+      <detail-params-info :paramsInfo='paramsdata' ref="params"></detail-params-info>
+      <detail-evaluate :evaluate='evaluate' ref="evaluate"></detail-evaluate>
+      <goods-list :goods='goodsList' ref="goods"></goods-list>
     </b-scroll>
   </div>
 </template>
@@ -23,8 +23,10 @@
   import DetailGoodsInfo from './detailChild/DetailGoodsInfo'
   import DetailParamsInfo from './detailChild/DetailParamsInfo'
   import DetailEvaluate from './detailChild/DetailEvaluate'
-  import DetailRecommend from './detailChild/DetailRecommend'
   import GoodsList from 'components/content/goodslist/GoodsList'
+
+  import {debounce} from 'common/utils'
+  import {itemListListenerMixIn} from 'common/mixins'
 
   export default {
     name: 'Detail',
@@ -37,7 +39,6 @@
       DetailGoodsInfo,
       DetailParamsInfo,
       DetailEvaluate,
-      DetailRecommend,
       GoodsList
     },
     data() {
@@ -49,21 +50,29 @@
         detailData: {},
         paramsdata: {},
         evaluate: {},
-        goodsList: []
+        goodsList: [],
+        themeTopYs: [],
+        getThemeTopY: null
       }
     },
     methods: {
       detailInfo() {
-        this.$refs.scroll.refresh();
+        this.refresh();
+
+        this.getThemeTopY();
+      },
+      detailThemeTopY(index) {
+        this.$refs.scroll.scrollTo(0,-this.themeTopYs[index],300);
       }
     },
+    mixins: [itemListListenerMixIn],
     created() {
       // 不能直接在 created 中保存 id 的原因是因为我们在 router-link 外包裹了 keep-alive 标签，导致 detail 只创建了一次
       // 保存传入的id
       this.id = this.$route.params.id;
       // 根据id请求数据
       getDetail(this.id).then(res => {
-        console.log(res);
+        // console.log(res);
         const data = res.result;
         // 获取轮播图信息
         this.topImages = data.itemInfo.topImages;
@@ -77,13 +86,38 @@
         this.paramsdata = new ItemParams(data.itemParams.info,data.itemParams.rule);
         // 获取商品评价的数据
         this.evaluate = new ItemEvaluate(data.rate);
+
+        /* this.$nextTick(() => {
+          // 在这个地方调用回调的话，可以拿到值，但是拿到的值不正确，原因在于调用该回调函数的时候有些图片可能还没有加载完，所以数据会不准确
+          this.themeTopYs = [];
+          this.themeTopYs.push(0);
+          this.themeTopYs.push(this.$refs.params.$el.offsetTop);
+          this.themeTopYs.push(this.$refs.evaluate.$el.offsetTop);
+          this.themeTopYs.push(this.$refs.goods.$el.offsetTop);
+          console.log(this.themeTopYs);
+        }) */
       })
       // 获取推荐的信息
       getRecommend().then(res => {
-        console.log(res);
+        // console.log(res);
         this.goodsList = res.data.list;
       })
+
+      this.getThemeTopY = debounce(() => {
+        this.themeTopYs = [];
+        this.themeTopYs.push(0);
+        this.themeTopYs.push(this.$refs.params.$el.offsetTop);
+        this.themeTopYs.push(this.$refs.evaluate.$el.offsetTop);
+        this.themeTopYs.push(this.$refs.goods.$el.offsetTop);
+        console.log(this.themeTopYs);
+      }, 500)
     },
+    mounted() {
+      // 因为是公共部分，所以写在了混入中去了
+    },
+    destroyed() {
+      this.$bus.$off('itemImgLoad', this.itemImgLoadFunc);
+    }
   }
 </script>
 

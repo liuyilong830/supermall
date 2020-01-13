@@ -17,7 +17,8 @@
 </template>
 
 <script>
-  import {filterDate} from 'filters/filters.js'
+  // import {filterDate} from 'filters/filters.js'
+  import {formatDate} from 'common/utils'
   export default {
     name: 'DetailEvaluate',
     props: {
@@ -30,7 +31,8 @@
     },
     filters: {
       filterDate(time) {
-        return filterDate(time);
+        const date = new Date(time*1000);
+        return formatDate(date , 'yyyy-MM-dd');
       }
     }
   }
@@ -40,6 +42,8 @@
   .detail-evaluate {
     padding: 0 10px 20px;
     box-shadow: 0 -2px 6px #d6c7c74f;
+    border-bottom: 4px solid #d6c7c74f;
+    margin-bottom: 5px;
   }
   .evaluate-top {
     height: 35px;
