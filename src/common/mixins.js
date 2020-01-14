@@ -20,3 +20,23 @@ export const itemListListenerMixIn = {
     this.$bus.$on('itemImgLoad', this.itemImgLoadFunc)
   },
 }
+
+import BackTop from 'components/content/backtop/BackTop'
+export const contentBackTopMixin = {
+  data() {
+    return {
+      isShowBackTop: false
+    }
+  },
+  components: {
+    BackTop
+  },
+  methods: {
+    backClick() {
+      this.$refs.scroll.scrollTo(0 , 0 , 500);
+    },
+    listenShowBackTop(position) {
+      this.isShowBackTop = (-position.y) > 1000
+    }
+  }
+}

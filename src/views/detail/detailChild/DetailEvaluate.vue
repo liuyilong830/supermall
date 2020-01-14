@@ -13,11 +13,13 @@
       <span class="others-time">{{evaluate.time | filterDate}}</span>
       <span class="others-style">{{evaluate.style}}</span>
     </div>
+    <div class="evaluate-img" v-if="evaluate.images !== undefined">
+      <img :src="item" alt="" v-for="(item,index) in evaluate.images" :key="index">
+    </div>
   </div>
 </template>
 
 <script>
-  // import {filterDate} from 'filters/filters.js'
   import {formatDate} from 'common/utils'
   export default {
     name: 'DetailEvaluate',
@@ -72,5 +74,9 @@
   }
   .evaluate-others .others-style {
     padding-left: 5px;
+  }
+  .evaluate-img img {
+    width: 25%;
+    vertical-align: bottom;
   }
 </style>

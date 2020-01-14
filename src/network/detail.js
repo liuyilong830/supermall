@@ -54,5 +54,6 @@ export class ItemEvaluate {
     this.content = rate.list[0].content;
     this.time = rate.list[0].created;
     this.style = rate.list[0].style;
+    this.images = rate.list[0].images
   }
 }

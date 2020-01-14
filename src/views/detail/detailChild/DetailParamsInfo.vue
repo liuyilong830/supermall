@@ -65,4 +65,7 @@ export default {
   .sizes-size span {
     flex: 1;
   }
+  .info-img img {
+    width: 100%;
+  }
 </style>

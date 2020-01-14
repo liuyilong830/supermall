@@ -24,11 +24,11 @@
   import FeatureViews from './childComps/FeatureViews'
   import TabControl from 'components/content/tabcontrol/TabControl'
   import GoodsList from 'components/content/goodslist/GoodsList'
-  import BackTop from 'components/content/backtop/BackTop'
+  // import BackTop from 'components/content/backtop/BackTop' //  抽取到混入中去了
 
   import {getHomeMultidata,getGoodsList} from 'network/home'
   import {debounce} from 'common/utils'
-  import {itemListListenerMixIn} from 'common/mixins'
+  import {itemListListenerMixIn , contentBackTopMixin} from 'common/mixins'
 
   import BScroll from 'components/common/better-scroll/BScroll'
 
@@ -42,7 +42,7 @@
       TabControl,
       GoodsList,
       BScroll,
-      BackTop
+      // BackTop  //  抽取到混入中去了
     },
     data() {
       return {
@@ -54,7 +54,7 @@
           sell: { page: 0 , list: [] }
         },
         currentType: 'pop',
-        isShowBackTop: false,
+        // isShowBackTop: false,  //  抽取到混入中去了
         tabOffsetTop: 0,
         isImageLoad: {
           swiper: false,
@@ -84,7 +84,7 @@
       console.log('home destroyed');
     },
     // 使用了混入
-    mixins: [itemListListenerMixIn],
+    mixins: [itemListListenerMixIn , contentBackTopMixin],
     mounted() {
       setTimeout(() => {
         this.ImageLoad();
@@ -127,13 +127,15 @@
         this.$refs.tabControl1.currentIndex = index;
         this.$refs.tabControl2.currentIndex = index;
       },
-      backClick() {
+      // 抽取到混入中去了
+      /* backClick() {
         this.$refs.scroll.scrollTo(0 , 0 , 500);
-      },
+      }, */
       contentScroll(position) {
         // console.log(position);
         // 1.当滚动超过 1000 之后显示回到顶部的按钮
-        this.isShowBackTop = (-position.y) > 1000
+        // this.isShowBackTop = (-position.y) > 1000  //  抽取到混入中去了
+        this.listenShowBackTop(position);  //  调用混入中的 demo方法达到返回顶部效果
         // 2.当滚动到一定位置时，显示另一个tabControl组件
         this.isTabControl = (-position.y) > this.tabOffsetTop
       },
