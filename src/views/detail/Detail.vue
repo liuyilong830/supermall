@@ -92,6 +92,8 @@
         product.desc = this.goods.desc;
         product.realPrice = this.goods.realPrice;
         // 2.将商品加入到购物车
+        // this.$store.commit('addToCar', product);
+        this.$store.dispatch('addToCart' , product);
       }
     },
     mixins: [itemListListenerMixIn , contentBackTopMixin],
@@ -164,5 +166,6 @@
   }
   .wrapper {
     height: calc(100% - 44px - 49px);
+    overflow:hidden;
   }
 </style>
