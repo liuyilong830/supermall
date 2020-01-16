@@ -32,6 +32,8 @@
   import {debounce} from 'common/utils'
   import {itemListListenerMixIn , contentBackTopMixin} from 'common/mixins'
 
+  import { mapActions } from 'vuex'
+
   export default {
     name: 'Detail',
     components: {
@@ -62,6 +64,10 @@
       }
     },
     methods: {
+      // ...mapActions(['addToCart']),
+      ...mapActions({
+        addCart: 'addToCart'
+      }),
       detailInfo() {
         this.refresh();
 
@@ -93,7 +99,14 @@
         product.realPrice = this.goods.realPrice;
         // 2.将商品加入到购物车
         // this.$store.commit('addToCar', product);
-        this.$store.dispatch('addToCart' , product);
+        /* this.$store.dispatch('addToCart' , product).then(res => {
+          console.log(res);
+        }) */
+        this.addCart(product).then(res => {
+          console.log(res)
+        })
+
+
       }
     },
     mixins: [itemListListenerMixIn , contentBackTopMixin],

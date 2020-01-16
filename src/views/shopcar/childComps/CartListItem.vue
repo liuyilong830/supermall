@@ -28,7 +28,7 @@
     },
     data() {
       return {
-        flag: false
+        
       }
     },
     props: {
@@ -41,13 +41,13 @@
     },
     computed: {
       activeFlag() {
-        return this.flag;
+        return this.product.check;
       }
     },
     methods: {
       ischecked() {
-        this.flag = !this.flag;
-        console.log('1111');
+        this.product.check = !this.product.check;
+        // console.log('1111');
       }
     }
   }

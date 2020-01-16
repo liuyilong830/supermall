@@ -19,14 +19,18 @@ export default {
   } */
   // 方法二：
   addToCart(context, obj) {
-    let oldProduct = context.state.cartList.find(item => item.id === obj.id);
-    if(oldProduct) {
-      // oldProduct.count ++;
-      context.commit(ADD_COUNTER, oldProduct)
-    }else {
-      obj.count = 1;
-      // context.state.cartList.push(obj);
-      context.commit(ADD_TO_CART, obj)
-    }
+    return new Promise((resolve,reject) => {
+      let oldProduct = context.state.cartList.find(item => item.id === obj.id);
+      if(oldProduct) {
+        // oldProduct.count ++;
+        context.commit(ADD_COUNTER, oldProduct)
+        resolve('商品数量 +1');
+      }else {
+        obj.count = 1;
+        // context.state.cartList.push(obj);
+        context.commit(ADD_TO_CART, obj)
+        resolve('商品添加到购物车');
+      }
+    })
   }
 }
