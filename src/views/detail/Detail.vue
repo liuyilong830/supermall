@@ -13,6 +13,8 @@
     <detail-bottom-bar @addToCar='addToCar'></detail-bottom-bar>
 
     <back-top @click.native="backClick" v-show="isShowBackTop"></back-top>
+
+    <!-- <toast :message='message' :isShow='isShow'></toast> -->
   </div>
 </template>
 
@@ -34,6 +36,8 @@
 
   import { mapActions } from 'vuex'
 
+  // import Toast from 'components/common/toast/Toast'
+
   export default {
     name: 'Detail',
     components: {
@@ -46,7 +50,8 @@
       DetailParamsInfo,
       DetailEvaluate,
       GoodsList,
-      DetailBottomBar
+      DetailBottomBar,
+      // Toast
     },
     data() {
       return {
@@ -60,7 +65,9 @@
         goodsList: [],
         themeTopYs: [],
         getThemeTopY: null,
-        currentIndex: 0
+        currentIndex: 0,
+        // message: '',
+        // isShow: false
       }
     },
     methods: {
@@ -103,6 +110,14 @@
           console.log(res);
         }) */
         this.addCart(product).then(res => {
+          /* this.message = res;
+          this.isShow = true;
+          setTimeout(() => {
+            this.message = "";
+            this.isShow = false;
+          }, 2000) */
+
+          this.$toast.show(res, 2000);
           console.log(res)
         })
 

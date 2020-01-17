@@ -3,7 +3,8 @@
     <div class='check-all'>
       <check-button 
         class='check-button' 
-        :flag='isCheckAll' @click.native='checkClick'></check-button>
+        :flag='isCheckAll'
+        @click.native='checkClick'></check-button>
       <span>全选</span>
     </div>
     <div class='price'>
@@ -11,7 +12,7 @@
       <span></span>
     </div>
     <div class='computed'>
-      <div class='calculate'>去计算:{{calculate}}</div>
+      <div class='calculate' @click='calculateClick'>去计算:{{calculate}}</div>
     </div>
   </div>
 </template>
@@ -20,6 +21,9 @@
   import CheckButton from 'components/content/checkButton/CheckButton'
   export default {
     name: 'CartBottomBar',
+    data() {
+      return {}
+    },
     components: {
       CheckButton
     },
@@ -47,6 +51,13 @@
           this.$store.state.cartList.forEach(item => { item.check = false });
         }else { //  部分或者全不选中
           this.$store.state.cartList.forEach(item => { item.check = true });
+        }
+      },
+      calculateClick() {
+        if(this.$store.state.cartList.every(item => !item.check)) {
+          this.$toast.show('请至少选择一件需要购买的商品',1000);
+        }else {
+          console.log('--------')
         }
       }
     }
