@@ -12,12 +12,6 @@
 </template>
 
 <script>
-  import VueLazyload from 'vue-lazyload'
-  import Vue from 'vue'
-  Vue.use(VueLazyload, {
-    loading: require('assets/images/common/back.svg'),//加载中图片，一定要有，不然会一直重复加载占位图
-    error: require('assets/images/common/back.svg')  //加载失败图片
-  });
   export default {
     name: 'GoodsListItem',
     props: {
